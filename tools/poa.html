@@ -468,7 +468,7 @@ details.nx-srcd summary { cursor: pointer; font-size: 13px; color: var(--muted);
         <div><h3>① 스캔본을 읽습니다</h3><p>타이핑된 출원인명·주소·서명자·직함·날짜와 표장 목록을 뽑고, 표장 이미지는 줄에서 잘라 둡니다. 읽은 값마다 원문 조각을 옆에 붙여 바로 대조할 수 있습니다.</p>
           <div class="eg"><span>원문</span><span class="mono">BRIGHTWAVE TECHNOLOGY PTE. LTD.</span><span>서명자</span><span class="mono">Wang Lei · Director</span></div></div>
         <div><h3>② 고객 표기를 확인합니다</h3><p>특허고객번호가 있는 고객은 특허로에 등록된 한글 명칭·주소를 그대로 씁니다. 동명이인은 자동으로 고르지 않고 주소로 비교해 보여 줍니다. 신규 고객은 소리 나는 대로 적고 주소는 국가부터 씁니다.</p>
-          <div class="eg"><span>등록</span><span>브이월드 테크놀로지 피티이 엘티디</span><span>주소</span><span>싱가포르 048580, #14-06, 래플스 퀘이 6</span></div></div>
+          <div class="eg"><span>등록</span><span>브라이트웨이브 테크놀로지 피티이 엘티디</span><span>주소</span><span>싱가포르 123456, #01-01, 샘플 로드 1</span></div></div>
         <div><h3>③ 워드로 내려받습니다</h3><p>사무소 번역문 양식(위임장, 양도증, 공증 증명서·아포스티유·법인 국적 증명서)에 값을 넣어 .docx로 만듭니다. 확인한 고객은 내 브라우저 장부에 쌓여 다음부터 자동으로 채워집니다.</p>
           <div class="eg"><span>파일</span><span class="mono">POA_번역문_BRIGHTWAVE_Technology_양도인_260917.docx</span></div></div>
       </div>
@@ -914,13 +914,13 @@ details.nx-srcd summary { cursor: pointer; font-size: 13px; color: var(--muted);
 
   // Address: reverse comma chunks so the country comes first; inside a chunk
   // the leading house number moves to the end (KIPO style):
-  // "6 RAFFLES QUAY, #14-06, 048580 SINGAPORE" → "싱가포르 048580, #14-06, 래플스 퀘이 6"
+  // "1 SAMPLE ROAD, #01-01, 123456 SINGAPORE" → "싱가포르 123456, #01-01, 샘플 로드 1"
   function addressOrder(en) {
     const chunks = clean(en).replace(/[,\s]+$/, '').split(/\s*,\s*/).filter(Boolean);
     return chunks.reverse().map((c) => {
       if (countryKo(c)) return { country: c, rest: [] };
       let toks = c.split(' ');
-      // country inside the chunk ("048580 SINGAPORE")
+      // country inside the chunk ("123456 SINGAPORE")
       for (let n = Math.min(4, toks.length); n >= 1; n--) {
         const tail = toks.slice(-n).join(' '), head = toks.slice(0, n).join(' ');
         if (countryKo(tail) && toks.length > n) return { country: tail, rest: toks.slice(0, -n) };
@@ -4491,7 +4491,7 @@ if (typeof module !== 'undefined') module.exports = OAGoods; else if (typeof win
       '3. 원문의 마침표와 쉼표는 그 자리에 그대로 둡니다. 예: Pte. Ltd. → 피티이. 엘티디.',
       '4. 붙어 있는 합성어는 읽히는 대로 적습니다. 예: BRIGHTWAVE → 브라이트웨이브.',
       '5. 중국어 병음 인명은 외래어 표기법(중국어)을 따르고 성과 이름 사이를 띄웁니다. 예: Wang Lei → 왕 레이, Zhang Wei → 장 웨이. 그 밖의 인명은 원어 발음대로 적습니다.',
-      '6. 주소는 쉼표로 나뉜 덩어리 순서를 거꾸로 하여 국가가 맨 앞에 오게 합니다. 덩어리 안에서 맨 앞의 번지 숫자는 덩어리 끝으로 옮깁니다. 국가명은 통용 한글명(싱가포르, 미국, 중국)을 씁니다. 우편번호와 호수(#14-06)는 그대로 둡니다. 예: "9 NORTH BUONA VISTA DRIVE, #02-01, THE METROPOLIS, 138588 SINGAPORE" → "싱가포르 138588, 더 메트로폴리스, #02-01, 노스 부오나 비스타 드라이브 9".',
+      '6. 주소는 쉼표로 나뉜 덩어리 순서를 거꾸로 하여 국가가 맨 앞에 오게 합니다. 덩어리 안에서 맨 앞의 번지 숫자는 덩어리 끝으로 옮깁니다. 국가명은 통용 한글명(싱가포르, 미국, 중국)을 씁니다. 우편번호와 호수(#01-01)는 그대로 둡니다. 예: "9 NORTH BUONA VISTA DRIVE, #02-01, THE METROPOLIS, 138588 SINGAPORE" → "싱가포르 138588, 더 메트로폴리스, #02-01, 노스 부오나 비스타 드라이브 9".',
       '7. draft가 있으면 규칙으로 이미 바꾼 부분이니 그대로 두고 영문으로 남은 부분만 채웁니다.',
       userWords ? `8. 사무소 고정 표기: ${userWords}` : '',
       '',
@@ -4793,7 +4793,7 @@ if (typeof module !== 'undefined') module.exports = OAGoods; else if (typeof win
     const enText = r.enShow ? `${h(en.v)} <span class="muted">(${h(r.enShow)})</span>` : h(en.v);
     const ko = r.ro
       ? `<div class="ko ro">${r.ko ? h(r.ko) : '<span class="muted">고객 확인 후 채워집니다</span>'} ${entityChip(r.ent)}</div>`
-      : `<input class="ko-in${!C.clean(r.ko) ? ' empty' : ''}" id="ko-${o.id}-${r.k.replace(/[^\w]/g, '_')}" data-o="${o.id}" data-k="${h(r.k)}" ${r.person ? `data-p="${r.person.id}"` : ''} value="${h(r.ko)}" placeholder="${r.person ? '한글 표기 (예: 스 옌옌)' : '번역문 값'}" aria-label="${h(r.label)} 번역문 값">`;
+      : `<input class="ko-in${!C.clean(r.ko) ? ' empty' : ''}" id="ko-${o.id}-${r.k.replace(/[^\w]/g, '_')}" data-o="${o.id}" data-k="${h(r.k)}" ${r.person ? `data-p="${r.person.id}"` : ''} value="${h(r.ko)}" placeholder="${r.person ? '한글 표기 (예: 왕 레이)' : '번역문 값'}" aria-label="${h(r.label)} 번역문 값">`;
     const snip = r.qrBox ? boxSnippet(pageRef, r.qrBox) : snippet(pageRef, en.src);
     return `<div class="row${warn ? ' has-warn' : ''}">
       <div class="lab">${h(r.label)}</div>
